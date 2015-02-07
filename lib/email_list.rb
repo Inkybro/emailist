@@ -7,6 +7,14 @@ class EmailList < Array
 		File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'valid_tlds.txt'))
 	).lines.to_a.map {|tld| tld.gsub(/[^A-Z\-]/, '') }
 
+	INVALID_START_WITH = 	[
+													'TO.', 'To.', 'E-mail', 'AS', 'TO:', 'To:'
+											 	]
+
+	INVALID_END_WITH = 		[
+													'.TO', '.To', 'E'
+											 	]
+
 	alias_method :_push, :push
 	def push(email)
 		_push(clean(email))
@@ -54,9 +62,20 @@ private
 
 	def clean(email)
 		return if email.nil?
+
+		# strip email first
+		email = email.strip
 		
 		# convert >1 consecutive period to 1 period
 		email.gsub!(/\.{2,}/, '.')
+
+		# remove invalid start/end with
+		INVALID_START_WITH.each do |with|
+			email = email[(with.length)..email.length-1] if email.start_with?(with)
+		end
+		INVALID_END_WITH.each do |with|
+			email = email[0..(email.length-with.length)] if email.end_with?(with)
+		end
 
 		# get local/domain parts separated
 		local, domain = email.split('@')

@@ -53,6 +53,20 @@ describe "EmailList" do
 			expect(@email_list.first).to eq 'bob.jones@yahoo.com'
 		end
 
+		describe "with common, leading, invalid word:" do
+			it "To" do
+				@email_list.add('To.bob.jones@yahoo.com')
+				expect(@email_list.first).to eq 'bob.jones@yahoo.com'
+			end
+		end
+
+		describe "with common, trailing, invalid word:" do
+			it "To" do
+				@email_list.add('bob.jones@yahoo.com.To')
+				expect(@email_list.first).to eq 'bob.jones@yahoo.com'
+			end
+		end
+
 		it "with invalid TLDs (valid TLD before invalid)" do
 			@email_list.add('bob.jones@yahoo.com.gloopoopoop')
 			expect(@email_list.first).to eq 'bob.jones@yahoo.com'
