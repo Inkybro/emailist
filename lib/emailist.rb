@@ -1,3 +1,5 @@
+require "possible_email"
+
 require "emailist/version"
 require "emailist/errors"
 
