@@ -15,6 +15,12 @@ class Emailist < Array
 		'.TO', '.To', 'E'
 	]
 
+
+	def initialize(verify_profiles: false)
+		@verify_profiles = verify_profiles
+	end
+
+
 	alias_method :_push, :push
 	def push(email)
 		_push(clean(email))
@@ -125,7 +131,20 @@ private
 		end
 		domain = new_domain.join('.')
 
-		"#{local}@#{domain}".downcase
+		email = "#{local}@#{domain}".downcase
+
+		if @verify_profiles
+			begin
+				response = [PossibleEmail.find_profile(email)].flatten
+				if response.empty?
+					raise Emailist::CantVerifyProfile
+				end
+			rescue PossibleEmail::InvalidEmailFormat
+				raise Emailist::InvalidEmailFormat
+			end
+		end
+
+		email
 	end
   
 end

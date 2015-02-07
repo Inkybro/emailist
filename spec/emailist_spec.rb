@@ -77,6 +77,14 @@ describe "Emailist" do
 		it "when an email contains no valid TLD" do
 			expect { @email_list.add('bob.jones@yahoo.gloopoopoop') }.to raise_error Emailist::InvalidTLD
 		end
+
+		#it "when an email is in an invalid format (for possible_email)" do
+		#	@email_list = Emailist.new(verify_profiles: true)
+		#	expect { @email_list._push('bob.jones@gloopoopoop') }.to raise_error Emailist::InvalidEmailFormat
+		#end
+
+		#it "when a profile can't be verified" do
+		#end
 	end
 
 end
