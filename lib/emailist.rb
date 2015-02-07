@@ -135,6 +135,10 @@ private
 
 		email = "#{local}@#{domain}".downcase
 
+# HAVE TO TRY AND REVERSE ENGINEER RAPPORTIVE/LINKEDIN API
+# FOR POSSIBLE_EMAIL GEM TO WORK. THIS FUNCTIONALITY REQUIRES
+# THAT API, WHICH APPARENTLY HAS BEEN SHUT DOWN FOR THE PUBLIC.
+=begin
 		if @verify_profiles
 			begin
 				response = [PossibleEmail.find_profile(email)].flatten
@@ -145,6 +149,7 @@ private
 				raise Emailist::InvalidEmailFormat
 			end
 		end
+=end
 
 		email
 	end
