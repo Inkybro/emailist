@@ -1,3 +1,4 @@
+require "net/ping"
 require "possible_email"
 
 require "emailist/version"
@@ -18,7 +19,8 @@ class Emailist < Array
 	]
 
 
-	def initialize(verify_profiles: false)
+	def initialize(verify_hosts: false, verify_profiles: false)
+		@verify_hosts = verify_hosts
 		@verify_profiles = verify_profiles
 	end
 
@@ -127,21 +129,12 @@ class Emailist < Array
 
 		email = "#{local}@#{domain}".downcase
 
-# HAVE TO TRY AND REVERSE ENGINEER RAPPORTIVE/LINKEDIN API
-# FOR POSSIBLE_EMAIL GEM TO WORK. THIS FUNCTIONALITY REQUIRES
-# THAT API, WHICH APPARENTLY HAS BEEN SHUT DOWN FOR THE PUBLIC.
-=begin
-		if @verify_profiles
-			begin
-				response = [PossibleEmail.find_profile(email)].flatten
-				if response.empty?
-					raise Emailist::CantVerifyProfile
-				end
-			rescue PossibleEmail::InvalidEmailFormat
-				raise Emailist::InvalidEmailFormat
-			end
+		#if @verify_profiles
+		#	 raise Emailist::ProfileNotFound if !profile_found?(email)
+		#end
+		if @verify_hosts
+			raise Emailist::HostDead if !host_alive?(email)
 		end
-=end
 
 		email
 	end
@@ -152,6 +145,54 @@ private
 		_delete(nil)
 		uniq!
 		return self
+	end
+
+	def host_alive?(email)
+		domain = email.split('@').last
+
+		result = if live_hosts.include?(domain)
+			true
+		elsif dead_hosts.include?(domain)
+			false
+		else
+	    Net::Ping::External.new(domain).ping?
+	  end
+
+	  if result
+	  	live_hosts.push(domain)
+	  	live_hosts.uniq!
+	  else
+	  	dead_hosts.push(domain)
+	  	dead_hosts.uniq!
+	  end
+
+	  result
+	end
+
+	def live_hosts
+		@live_hosts ||= []
+	end
+
+	def dead_hosts
+		@dead_hosts ||= []
+	end
+
+	def profile_found?(email)
+		# HAVE TO TRY AND REVERSE ENGINEER RAPPORTIVE/LINKEDIN API
+		# FOR POSSIBLE_EMAIL GEM TO WORK. THIS FUNCTIONALITY REQUIRES
+		# THAT API, WHICH APPARENTLY HAS BEEN SHUT DOWN FOR THE PUBLIC.
+=begin
+				if @verify_profiles
+					begin
+						response = [PossibleEmail.find_profile(email)].flatten
+						if response.empty?
+							raise Emailist::CantVerifyProfile
+						end
+					rescue PossibleEmail::InvalidEmailFormat
+						raise Emailist::InvalidEmailFormat
+					end
+				end
+=end		
 	end
   
 end

@@ -27,5 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "shoulda-matchers"
 
+  spec.add_runtime_dependency "net-ping"
   spec.add_runtime_dependency "possible_email"
 end

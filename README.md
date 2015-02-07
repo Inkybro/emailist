@@ -50,16 +50,22 @@ Invalid emails are attempted to be cleaned:
 		emails.add('fred.smith@example.com.')
 		=> ['fred.smith@example.com']
 
-Finally, invalid TLDs raise `Emailist::InvalidTLD`:
+Invalid TLDs (after cleaning) raise `Emailist::InvalidTLD`:
 
 		emails = Emailist.new
 		emails.add('bob.jones@fooo.baar')
 		=> # raises Emailist::InvalidTLD
 
+Finally, if you want to verify hosts (example.com in bob.jones@example.com), do:
+
+		emails = Emailist.new(verify_hosts: true)
+		emails.add('bob.jones@af983h98hsdf98hgiau3hnvgbjiobj8.com')
+		=> # raises Emailist::HostDead
+
 ## Ideas For Improvement
 
 1. Some kind of "best-guess" algorithm that can take invalid TLDs and find the most likely intended TLD (e.g. I'm getting some emails from my parser that have an 'E', like 'bob.jones@blah.comE' -- this clearly is supposed to be '.com'). Perhaps Levenshtein distance could be useful for this.
-2. Ping email domains and raise an error when they're unresponsive. Not sure if this is a good idea, though. Might have some negative side effects that I'm not considering.
+2. Fix `possible_email` gem -- Rapportive still has an API but they've modified it, so the code for the gem doesn't work. This will require reverse-engineering the API, as they don't offer access publicly. Not sure if it's even possible, but worth a try.
 
 ## Contributing
 
