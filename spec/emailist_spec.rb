@@ -73,18 +73,26 @@ describe "Emailist" do
 		end
 	end
 
-	context "raises errors" do
+	describe "raises errors" do
 		it "when an email contains no valid TLD" do
 			expect { @email_list.add('bob.jones@yahoo.gloopoopoop') }.to raise_error Emailist::InvalidTLD
 		end
 
-		#it "when an email is in an invalid format (for possible_email)" do
-		#	@email_list = Emailist.new(verify_profiles: true)
-		#	expect { @email_list._push('bob.jones@gloopoopoop') }.to raise_error Emailist::InvalidEmailFormat
-		#end
+		it "when an email's host is dead (with verify_hosts turned on)" do
+			@email_list = Emailist.new(verify_hosts: true)
+			expect { @email_list.add('bob.jones@gloopoop.poop.com') }.to raise_error Emailist::HostDead
+		end
+	end
 
-		#it "when a profile can't be verified" do
-		#end
+	describe "does not raise errors" do
+		it "when an email contains a valid TLD" do
+			expect { @email_list.add('bob.jones@yahoo.com') }.to_not raise_error
+		end
+
+		it "when an email's host is up (with verify_hosts turned on)" do
+			@email_list = Emailist.new(verify_hosts: true)
+			expect { @email_list.add('bob.jones@yahoo.com') }.to_not raise_error
+		end
 	end
 
 end
