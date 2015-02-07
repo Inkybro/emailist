@@ -154,26 +154,27 @@ private
 		return true if live_hosts.include?(domain)
 		return false if dead_hosts.include?(domain)
 
+		result = false # assume the host is dead
+
 		resolv = Resolv::DNS.new(
 			nameserver: ['8.8.8.8'],
 			search: [],
 			ndots: 1
 		)
 		ip_addr = begin
-			resolv.getaddress(domain)
+			resolv.getaddress(domain).to_s
 		rescue Resolv::ResolvError
 		end
 		dns_result = ip_addr ? true : false
 
-		ping_result = if live_hosts.include?(domain)
-			true
-		elsif dead_hosts.include?(domain)
-			false
-		else
-	    Net::Ping::External.new(domain).ping?
-	  end
+		if dns_result
+			ping_result = Net::Ping::External.new(ip_addr).ping
 
-	  result = (dns_result || ping_result)
+			if ping_result
+				result = true
+			end
+		end
+
 	  if result
 	  	live_hosts.push(domain)
 	  	live_hosts.uniq!
