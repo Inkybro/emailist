@@ -7,13 +7,19 @@ class Emailist < Array
 		File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'valid_tlds.txt'))
 	).lines.to_a.map {|tld| tld.gsub(/[^A-Z\-]/, '') }
 
-	INVALID_START_WITH = 	[
-													'TO.', 'To.', 'E-mail', 'AS', 'TO:', 'To:'
-											 	]
+	INVALID_START_WITH = [
+		'TO.', 'To.', 'E-mail', 'AS', 'TO:', 'To:'
+	]
 
-	INVALID_END_WITH = 		[
-													'.TO', '.To', 'E'
-											 	]
+	INVALID_END_WITH = [
+		'.TO', '.To', 'E'
+	]
+
+
+	def initialize(verify_profiles: false)
+		@verify_profiles = verify_profiles
+	end
+
 
 	alias_method :_push, :push
 	def push(email)
@@ -125,7 +131,20 @@ private
 		end
 		domain = new_domain.join('.')
 
-		"#{local}@#{domain}".downcase
+		email = "#{local}@#{domain}".downcase
+
+		if @verify_profiles
+			begin
+				response = [PossibleEmail.find_profile(email)].flatten
+				if response.empty?
+					raise Emailist::CantVerifyProfile
+				end
+			rescue PossibleEmail::InvalidEmailFormat
+				raise Emailist::InvalidEmailFormat
+			end
+		end
+
+		email
 	end
   
 end
