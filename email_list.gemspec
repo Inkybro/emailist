@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = EmailList::VERSION
   spec.authors       = ["Ethan Barron"]
   spec.email         = ["inkybro@gmail.com"]
-  spec.summary       = %q{Ruby array wrapper built to manage lists of email addresses.}
+  spec.summary       = %q{Wrapper around Ruby's Array class for managing lists of email addresses.}
   spec.description   = %q{
                           Provides a Ruby array wrapper that helps in managing a list of 
                           email addresses. Automagically uniquifies the list, as well as
