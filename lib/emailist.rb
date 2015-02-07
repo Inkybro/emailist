@@ -1,3 +1,4 @@
+require "resolv"
 require "net/ping"
 require "possible_email"
 
@@ -150,7 +151,21 @@ private
 	def host_alive?(email)
 		domain = email.split('@').last
 
-		result = if live_hosts.include?(domain)
+		return true if live_hosts.include?(domain)
+		return false if dead_hosts.include?(domain)
+
+		resolv = Resolv::DNS.new(
+			nameserver: ['8.8.8.8'],
+			search: [],
+			ndots: 1
+		)
+		ip_addr = begin
+			resolv.getaddress(domain)
+		rescue Resolv::ResolvError
+		end
+		dns_result = ip_addr ? true : false
+
+		ping_result = if live_hosts.include?(domain)
 			true
 		elsif dead_hosts.include?(domain)
 			false
@@ -158,6 +173,7 @@ private
 	    Net::Ping::External.new(domain).ping?
 	  end
 
+	  result = (dns_result || ping_result)
 	  if result
 	  	live_hosts.push(domain)
 	  	live_hosts.uniq!
