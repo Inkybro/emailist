@@ -1,8 +1,8 @@
 require_relative './spec_helper'
 
-describe "EmailList" do
+describe "Emailist" do
 
-	before(:each) { @email_list = EmailList.new }
+	before(:each) { @email_list = Emailist.new }
 
 	it "allows adding emails" do
 		@email_list.add('bob@test.com')
@@ -75,7 +75,7 @@ describe "EmailList" do
 
 	context "raises errors" do
 		it "when an email contains no valid TLD" do
-			expect { @email_list.add('bob.jones@yahoo.gloopoopoop') }.to raise_error EmailList::InvalidTLD
+			expect { @email_list.add('bob.jones@yahoo.gloopoopoop') }.to raise_error Emailist::InvalidTLD
 		end
 	end
 

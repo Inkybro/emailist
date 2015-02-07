@@ -1,7 +1,7 @@
-require "email_list/version"
-require "email_list/errors"
+require "emailist/version"
+require "emailist/errors"
 
-class EmailList < Array
+class Emailist < Array
 
 	VALID_TLDS = File.read(
 		File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'valid_tlds.txt'))
@@ -119,7 +119,7 @@ private
 					new_domain.unshift(part)
 				end
 			end
-			raise EmailList::InvalidTLD if !found_tld
+			raise Emailist::InvalidTLD if !found_tld
 		else
 			new_domain = domain_split.reverse
 		end

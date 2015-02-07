@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'email_list/version'
+require 'emailist/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "email_list"
-  spec.version       = EmailList::VERSION
+  spec.name          = "emailist"
+  spec.version       = Emailist::VERSION
   spec.authors       = ["Ethan Barron"]
   spec.email         = ["inkybro@gmail.com"]
   spec.summary       = %q{Wrapper around Ruby's Array class for managing lists of email addresses.}

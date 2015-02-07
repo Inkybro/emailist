@@ -1,1 +1,1 @@
-require_relative '../lib/email_list'
+require_relative '../lib/emailist'
