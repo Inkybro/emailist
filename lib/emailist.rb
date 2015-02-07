@@ -60,14 +60,6 @@ class Emailist < Array
 		_include?(clean(email))
 	end
 
-private
-
-	def refresh!
-		_delete(nil)
-		uniq!
-		return self
-	end
-
 	def clean(email)
 		return if email.nil?
 
@@ -152,6 +144,14 @@ private
 =end
 
 		email
+	end
+
+private
+
+	def refresh!
+		_delete(nil)
+		uniq!
+		return self
 	end
   
 end
