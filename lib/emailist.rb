@@ -7,13 +7,13 @@ class Emailist < Array
 		File.expand_path(File.join(File.dirname(__FILE__), '..', 'data', 'valid_tlds.txt'))
 	).lines.to_a.map {|tld| tld.gsub(/[^A-Z\-]/, '') }
 
-	INVALID_START_WITH = 	[
-													'TO.', 'To.', 'E-mail', 'AS', 'TO:', 'To:'
-											 	]
+	INVALID_START_WITH = [
+		'TO.', 'To.', 'E-mail', 'AS', 'TO:', 'To:'
+	]
 
-	INVALID_END_WITH = 		[
-													'.TO', '.To', 'E'
-											 	]
+	INVALID_END_WITH = [
+		'.TO', '.To', 'E'
+	]
 
 	alias_method :_push, :push
 	def push(email)
