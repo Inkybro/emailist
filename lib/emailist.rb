@@ -163,12 +163,13 @@ private
 			resolv.getaddress(domain).to_s
 		rescue Resolv::ResolvError
 		end
-		
-		dns_result = ip_addr ? true : false
-		ping_ip_result = !dns_result ? Net::Ping::External.new(ip_addr).ping : nil
-		ping_domain_result = !ping_ip_result ? Net::Ping::External.new(ip_addr).ping : nil
 
-	  if dns_result || ping_ip_result || ping_domain_result
+		dns_result = ip_addr ? true : false
+		ping_ip_result = dns_result ? Net::Ping::External.new(ip_addr).ping : nil
+		ping_domain_result = !ping_ip_result ? Net::Ping::External.new(domain).ping : nil
+
+		result = (dns_result || ping_ip_result || ping_domain_result)
+	  if result
 	  	live_hosts.push(domain)
 	  	live_hosts.uniq!
 	  else
