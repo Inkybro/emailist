@@ -80,7 +80,7 @@ describe "Emailist" do
 
 		it "when an email's host is dead (with verify_hosts turned on)" do
 			@email_list = Emailist.new(verify_hosts: true)
-			expect { @email_list.add('bob.jones@gloopoop.poop.com') }.to raise_error Emailist::HostDead
+			expect { @email_list.add('bob.jones@gloopoop.poop.ad9f8u4nfaj0.com') }.to raise_error Emailist::HostDead
 		end
 	end
 
